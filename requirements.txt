@@ -1,0 +1,6 @@
+streamlit
+torch
+librosa
+soundfile
+transformers
+numpy

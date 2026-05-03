@@ -185,6 +185,8 @@ def evaluateFleursWer():
             writer.writerow(["language", "reference", "prediction", "wer"])
         
         for langName, langCode in fleursLangMap.items():
+            if langName != "telugu":
+                continue
             print(f"Evaluating FLEURS for {langName} ({langCode})...")
             datasetName = f"{langCode}_in"
             dataset = load_dataset("google/fleurs", name=datasetName, split="test", streaming=True, trust_remote_code=True)

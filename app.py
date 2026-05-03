@@ -428,6 +428,13 @@ audioValue = st.audio_input("🎤 Speak to the kitten")
 if audioValue is not None:
     rawBytes = audioValue.read()
 
+    st.download_button(
+        label="💾 Download recording",
+        data=rawBytes,
+        file_name="recording.wav",
+        mime="audio/wav"
+    )
+
     # Guard: hash the audio so we never reprocess the same clip on rerun
     audioHash = hashlib.md5(rawBytes).hexdigest()
     if audioHash != st.session_state["lastAudioHash"]:

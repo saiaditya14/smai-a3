@@ -159,6 +159,28 @@ def matchCommand(text):
 
     return None
 
+wakeword = "hey bharat"
+wakeParts = ["hey", "bharat"]
+fuzzyThresh = 0.6
+
+def detectWake(text):
+    cleaned = text.lower().strip()
+    if wakeword in cleaned:
+        return True
+
+    words = cleaned.split()
+    for i in range(len(words) - 1):
+        scoreHey = fuzzyScore(words[i], wakeParts[0])
+        scoreBharat = fuzzyScore(words[i + 1], wakeParts[1])
+        if scoreHey >= fuzzyThresh and scoreBharat >= fuzzyThresh:
+            return True
+
+    for w in words:
+        if fuzzyScore(w, "bharat") >= 0.7:
+            return True
+
+    return False
+
 def ensureNewline(filePath):
     if os.path.exists(filePath) and os.path.getsize(filePath) > 0:
         with open(filePath, "rb+") as fp:
@@ -167,6 +189,10 @@ def ensureNewline(filePath):
                 fp.write(b'\n')
 
 def runMultiLangPipeline(audioData, proc, model):
+    fullText = transcribe(audioData, proc, model, lang="en", prompt="Hey Bharat")
+    if not detectWake(fullText):
+        return None
+
     for langName, langCode in fleursLangMap.items():
         langText = transcribe(audioData, proc, model, lang=langCode)
         result = matchCommand(langText)

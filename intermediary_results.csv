@@ -9,55 +9,55 @@ hi_recording2.wav,increase volume,increase volume,True
 hi_recording3.wav,increase volume,none,False
 hi_recording4.wav,increase volume,none,False
 hi_recording5.wav,increase volume,none,False
-hi_recording1.wav,none,turn on the light,False
+hi_recording1.wav,none,none,True
 hi_recording10.wav,none,none,True
-hi_recording11.wav,none,turn on the fan,False
-hi_recording12.wav,none,turn on the fan,False
+hi_recording11.wav,none,none,True
+hi_recording12.wav,none,none,True
 hi_recording13.wav,none,none,True
-hi_recording14.wav,none,turn on the fan,False
-hi_recording15.wav,none,turn on the fan,False
-hi_recording16.wav,none,turn off the fan,False
-hi_recording17.wav,none,turn off the fan,False
+hi_recording14.wav,none,none,True
+hi_recording15.wav,none,none,True
+hi_recording16.wav,none,none,True
+hi_recording17.wav,none,none,True
 hi_recording18.wav,none,none,True
-hi_recording19.wav,none,turn off the fan,False
-hi_recording2.wav,none,turn on the light,False
-hi_recording20.wav,none,turn off the fan,False
-hi_recording21.wav,none,play music,False
-hi_recording22.wav,none,play music,False
-hi_recording23.wav,none,play music,False
-hi_recording24.wav,none,play music,False
-hi_recording25.wav,none,play music,False
-hi_recording26.wav,none,stop music,False
-hi_recording27.wav,none,stop music,False
-hi_recording28.wav,none,stop music,False
-hi_recording29.wav,none,stop music,False
+hi_recording19.wav,none,none,True
+hi_recording2.wav,none,none,True
+hi_recording20.wav,none,none,True
+hi_recording21.wav,none,none,True
+hi_recording22.wav,none,none,True
+hi_recording23.wav,none,none,True
+hi_recording24.wav,none,none,True
+hi_recording25.wav,none,none,True
+hi_recording26.wav,none,none,True
+hi_recording27.wav,none,none,True
+hi_recording28.wav,none,none,True
+hi_recording29.wav,none,none,True
 hi_recording3.wav,none,turn on the light,False
-hi_recording30.wav,none,stop music,False
+hi_recording30.wav,none,none,True
 hi_recording31.wav,none,none,True
 hi_recording32.wav,none,none,True
 hi_recording33.wav,none,none,True
 hi_recording34.wav,none,increase volume,False
 hi_recording35.wav,none,none,True
-hi_recording36.wav,none,decrease volume,False
-hi_recording37.wav,none,decrease volume,False
-hi_recording38.wav,none,decrease volume,False
-hi_recording39.wav,none,decrease volume,False
+hi_recording36.wav,none,none,True
+hi_recording37.wav,none,none,True
+hi_recording38.wav,none,none,True
+hi_recording39.wav,none,none,True
 hi_recording4.wav,none,turn on the light,False
-hi_recording40.wav,none,decrease volume,False
+hi_recording40.wav,none,none,True
 hi_recording41.wav,none,none,True
-hi_recording42.wav,none,tell the temperature,False
-hi_recording43.wav,none,tell the temperature,False
-hi_recording44.wav,none,tell the temperature,False
+hi_recording42.wav,none,none,True
+hi_recording43.wav,none,none,True
+hi_recording44.wav,none,none,True
 hi_recording45.wav,none,none,True
-hi_recording46.wav,none,tell the time,False
+hi_recording46.wav,none,none,True
 hi_recording47.wav,none,none,True
 hi_recording48.wav,none,none,True
-hi_recording49.wav,none,tell the time,False
+hi_recording49.wav,none,none,True
 hi_recording5.wav,none,turn on the light,False
-hi_recording50.wav,none,tell the time,False
+hi_recording50.wav,none,none,True
 hi_recording6.wav,none,turn off the light,False
 hi_recording7.wav,none,turn off the light,False
-hi_recording8.wav,none,turn off the light,False
+hi_recording8.wav,none,none,True
 hi_recording9.wav,none,turn off the light,False
 hi_recording1.wav,play music,play music,True
 hi_recording2.wav,play music,play music,True
@@ -99,7 +99,7 @@ hi_recording3.wav,turn on the fan,turn on the fan,True
 hi_recording4.wav,turn on the fan,turn on the fan,True
 hi_recording5.wav,turn on the fan,turn on the fan,True
 hi_recording1.wav,turn on the light,turn on the light,True
-hi_recording2.wav,turn on the light,turn on the light,True
+hi_recording2.wav,turn on the light,none,False
 hi_recording3.wav,turn on the light,turn on the light,True
 hi_recording4.wav,turn on the light,turn on the light,True
 hi_recording5.wav,turn on the light,turn on the light,True

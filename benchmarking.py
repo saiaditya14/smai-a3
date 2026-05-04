@@ -223,16 +223,28 @@ def evaluateFleursWer():
 
 def evaluateLocalCommands(dataDir):
     proc, model = loadModel()
-    outCsv = "benchmark_results_local.csv"
+    outCsv = "intermediary_results.csv"
     
+    processed_items = set()
+    total = 0
+    successes = 0
+
+    if os.path.exists(outCsv) and os.stat(outCsv).st_size > 0:
+        with open(outCsv, "r", encoding="utf-8") as f:
+            reader = csv.reader(f)
+            next(reader, None) # skip header
+            for row in reader:
+                if row and len(row) >= 4:
+                    processed_items.add((row[0], row[1]))
+                    total += 1
+                    if row[3].lower() == 'true':
+                        successes += 1
+                        
     ensureNewline(outCsv)
     with open(outCsv, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if os.stat(outCsv).st_size == 0:
             writer.writerow(["fileName", "expectedAction", "predictedAction", "success"])
-            
-        total = 0
-        successes = 0
         
         for subDir in os.listdir(dataDir):
             subDirPath = os.path.join(dataDir, subDir)
@@ -243,6 +255,9 @@ def evaluateLocalCommands(dataDir):
             
             for fileName in os.listdir(subDirPath):
                 if not fileName.lower().endswith(".wav"):
+                    continue
+                    
+                if (fileName, expectedAction) in processed_items:
                     continue
                     
                 filePath = os.path.join(subDirPath, fileName)
@@ -265,6 +280,7 @@ def evaluateLocalCommands(dataDir):
                     print(f"Heartbeat: Processed {total} local samples...")
                 
                 writer.writerow([fileName, expectedAction, predictedAction, isSuccess])
+                f.flush() # Ensure it's saved immediately as intermediary
                 
         accuracy = (successes / total) * 100 if total > 0 else 0
         print(f"\nLocal Commands Evaluation Summary")

@@ -1,0 +1,105 @@
+fileName,expectedAction,rawTranscription
+hi_recording1.wav,decrease volume,"He Bharat, Avaar Scamkaru"
+hi_recording2.wav,decrease volume,"He Bharat, Aavas, Kam, Karu."
+hi_recording3.wav,decrease volume,"Hi Bharat, Avas, Kam Karu"
+hi_recording4.wav,decrease volume,"Hey Bharat, Avaaskam Karu"
+hi_recording5.wav,decrease volume,Bharet Avaskam Karu
+hi_recording1.wav,increase volume,"Hi Bharat, Ava's Pradow."
+hi_recording2.wav,increase volume,"Hey Bharat, Aavas, Bhadhao."
+hi_recording3.wav,increase volume,He Bharak Aavas Bharaw.
+hi_recording4.wav,increase volume,"Heep heart, Abhaz Bharho"
+hi_recording5.wav,increase volume,"He Bharat, Allah's, but how."
+hi_recording1.wav,none,Bhatti jalao
+hi_recording10.wav,none,"but thee, budhjao"
+hi_recording11.wav,none,Bon khacha lucaroo
+hi_recording12.wav,none,bankha chalu garo
+hi_recording13.wav,none,"Onka, shallu karo."
+hi_recording14.wav,none,bankha chalu garo
+hi_recording15.wav,none,Pankha chalu karo
+hi_recording16.wav,none,バンカーバンとガロー
+hi_recording17.wav,none,パンカーバントカロ
+hi_recording18.wav,none,Bank habit guru.
+hi_recording19.wav,none,ฟังค่ะบันที่กับรู
+hi_recording2.wav,none,Bhatti jalao
+hi_recording20.wav,none,バンカ バンデカロ
+hi_recording21.wav,none,"Ghana, be careful."
+hi_recording22.wav,none,"Ghana, bajau"
+hi_recording23.wav,none,"Ghana, Vajau"
+hi_recording24.wav,none,Gaana Bajo
+hi_recording25.wav,none,"Ghana, Vajau"
+hi_recording26.wav,none,"Ghana, Band, Karu"
+hi_recording27.wav,none,gana vand garu
+hi_recording28.wav,none,vana bent karu
+hi_recording29.wav,none,"Ghana, Bund, Karo"
+hi_recording3.wav,none,butti jalao
+hi_recording30.wav,none,gana band karu
+hi_recording31.wav,none,"Avaas, bird how."
+hi_recording32.wav,none,"Avas, Barhao."
+hi_recording33.wav,none,Ava's Bert Hou.
+hi_recording34.wav,none,Avas. But how?
+hi_recording35.wav,none,Abbas Burkhaw.
+hi_recording36.wav,none,Avaar skam karu
+hi_recording37.wav,none,¿Avás? ¿Cómo?
+hi_recording38.wav,none,Avas kam karu
+hi_recording39.wav,none,avash kam karu
+hi_recording4.wav,none,Bharti jalao
+hi_recording40.wav,none,Ava askam karu
+hi_recording41.wav,none,Tep manwetau
+hi_recording42.wav,none,"Tapan, betau."
+hi_recording43.wav,none,"Tapan, betau."
+hi_recording44.wav,none,Appman Vatau
+hi_recording45.wav,none,Abman petau
+hi_recording46.wav,none,"Semoga, saya betal."
+hi_recording47.wav,none,xam mẹ và tạo
+hi_recording48.wav,none,Same a betaulho.
+hi_recording49.wav,none,Samai vatao
+hi_recording5.wav,none,But thee jalao
+hi_recording50.wav,none,Samay batau
+hi_recording6.wav,none,butti bhu jhau
+hi_recording7.wav,none,"Bharti, Bhujhahao"
+hi_recording8.wav,none,Bhatti Bhujau
+hi_recording9.wav,none,"Bharti, Bhujhao"
+hi_recording1.wav,play music,"Hey Bharat, gana vajou."
+hi_recording2.wav,play music,He Bharat Gana Bhajao
+hi_recording3.wav,play music,"He Bharat, Ghana Bajao."
+hi_recording4.wav,play music,ki baharak gana bajau
+hi_recording5.wav,play music,Gee Bharat ganapaja
+ta_recad.wav,play music,"HBARAT, ParticPode"
+ta_recad2.wav,play music,"Hey Bharat, Partipur"
+ta_recad3.wav,play music,"Hey Bharat, back to Buddha."
+ta_recad4.wav,play music,"Hey Bharat, Arta Pudu!"
+hi_recording1.wav,stop music,He parath ganapand karu
+hi_recording2.wav,stop music,"Hey Bharat, gana bant karu!"
+hi_recording3.wav,stop music,"HEE Bharat, gana bentkaru"
+hi_recording4.wav,stop music,Gana bentkaru
+hi_recording5.wav,stop music,"He Bharat, Gana Bandkaru"
+hi_recording1.wav,tell the temperature,"Hey Bharat, Tapman Batao."
+hi_recording2.wav,tell the temperature,He Bharat Tapman Batau
+hi_recording3.wav,tell the temperature,He Bharat Tapman Vitao
+hi_recording4.wav,tell the temperature,He Bharat Tapman Patau
+hi_recording5.wav,tell the temperature,He Bharat Tapman Bhatau
+hi_recording1.wav,tell the time,"Hi Bharat, Samay batau."
+hi_recording2.wav,tell the time,Gee Bharat Samai Batau
+hi_recording3.wav,tell the time,Bhai Bharat Samaybattao
+hi_recording4.wav,tell the time,이 Bharati samai batau
+hi_recording5.wav,tell the time,"He Bharat, Samebatao."
+hi_recording1.wav,turn off the fan,"He parade, boncavenduru."
+hi_recording2.wav,turn off the fan,"He Bharat, Pankavandkaru"
+hi_recording3.wav,turn off the fan,"Hey Bharat, Pankha, Bundkaru."
+hi_recording4.wav,turn off the fan,Hey Bharat bhanhava bandkaru
+hi_recording5.wav,turn off the fan,"Sheep Harit, Bunkha Bandkaru"
+hi_recording1.wav,turn off the light,"This Bharat, Bhati Bhujao."
+hi_recording2.wav,turn off the light,"Hey Bharat, Bhatti Bhujao!"
+hi_recording3.wav,turn off the light,Hey Bharat Bhati Bhujihao!
+hi_recording4.wav,turn off the light,She Bharat Bhatti Bhujao
+hi_recording5.wav,turn off the light,HEEB harith batti bhu jhau
+hi_recording1.wav,turn on the fan,"Hey Bharat, Pankha Chalu Guru"
+hi_recording2.wav,turn on the fan,khibhar bhamkhachanu karu
+hi_recording3.wav,turn on the fan,He Bharat banka chalu baro
+hi_recording4.wav,turn on the fan,"HEE Bharat, Pankha Chalukaru"
+hi_recording5.wav,turn on the fan,bhanka chalu bharu
+hi_recording1.wav,turn on the light,"Hey Bharat, batti jalao"
+hi_recording2.wav,turn on the light,shave harith batti janao
+hi_recording3.wav,turn on the light,"Hey Bharat, bati jalao!"
+hi_recording4.wav,turn on the light,Shee Bharat Bhatti Jalao
+hi_recording5.wav,turn on the light,Jai Bharat Bhatti Jalao

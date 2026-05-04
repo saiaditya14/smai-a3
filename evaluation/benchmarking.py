@@ -7,7 +7,7 @@ import numpy as np
 from datasets import load_dataset
 from jiwer import wer
 from difflib import SequenceMatcher
-
+#running our architecture on dataset
 commandsMap = {
     "hindi": {
         "बत्ती जलाओ": "Turn on the light",

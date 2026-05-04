@@ -17,3 +17,6 @@ The raw baseline struggles significantly due to:
 
 ## Conclusion
 The massive ~20x improvement in accuracy mathematically justifies the architecture of `app.py`. The fuzzy matching and language-forcing pipeline is absolutely critical for making small, edge-friendly models like `whisper-tiny` viable for multilingual command recognition.
+
+
+0.908 had 80%

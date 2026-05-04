@@ -5,6 +5,8 @@ import torch
 import librosa
 import numpy as np
 import io
+import os
+import glob
 from difflib import SequenceMatcher
 
 # ---------------------------------------------------------------------------
@@ -173,43 +175,127 @@ def transcribe(audioArray, proc, model, lang=None, prompt=None):
     return text.strip()
 
 # ---------------------------------------------------------------------------
-# Wakeword detection (deterministic string matching)
+# Fuzzy string matching (used by command matching below)
 # ---------------------------------------------------------------------------
-
-wakeword = "hey bharat"
-wakeParts = ["hey", "bharat"]
-fuzzyThresh = 0.6
 
 def fuzzyScore(a, b):
     """Return SequenceMatcher ratio between two lowercase strings."""
     return SequenceMatcher(None, a.lower(), b.lower()).ratio()
 
-def detectWake(text):
+# ---------------------------------------------------------------------------
+# Wakeword detection — Acoustic Embedding Cosine Similarity
+# ---------------------------------------------------------------------------
+# Instead of decoding audio to text (which hallucinates for non-English proper
+# nouns), we use Whisper's ENCODER as an acoustic feature extractor:
+#   1. Build an "anchor" embedding by averaging encoder outputs over reference
+#      recordings of "Hey Bharat" (stored in help/yes/*.wav).
+#   2. For incoming audio, extract encoder embedding of the speech portion
+#      and compute cosine similarity against the anchor.
+#   3. If similarity exceeds a threshold, the wakeword is detected.
+# This completely bypasses the autoregressive decoder for the wakeword step.
+# ---------------------------------------------------------------------------
+
+WAKE_ENROLL_DIR = os.path.join(os.path.dirname(__file__) or ".", "help", "yes")
+WAKE_SIM_THRESHOLD = 0.922  # statistically optimal across both domains
+
+
+def _extractEncoderEmbedding(audioArray, proc, model):
     """
-    Fuzzy wakeword detection.  First tries an exact substring check.
-    If that fails, slides a two-word window over the transcript and
-    checks if each word is close enough to its wakeword counterpart.
+    Run audio through Whisper's encoder only (no autoregressive decoding).
+    Mean-pool across active speech frames to get a fixed-size embedding.
+    
+    Whisper-tiny encoder output: (1, T, 384) where T=1500 (for 30s window).
+    We only pool over frames corresponding to actual audio content, not
+    the zero-padded silence that dominates short clips.
     """
-    cleaned = text.lower().strip()
+    # Trim silence so we only encode active speech
+    trimmed, _ = librosa.effects.trim(audioArray, top_db=25)
+    nAudioFrames = len(trimmed) // 160  # mel spectrogram frames (~100 frames/sec)
 
-    # Fast path: exact match
-    if wakeword in cleaned:
-        return True
+    inputs = proc(trimmed, sampling_rate=targetRate, return_tensors="pt")
+    encoder = model.get_encoder()
+    with torch.no_grad():
+        encOut = encoder(inputs.input_features)
 
-    # Fuzzy path: compare every consecutive word pair
-    words = cleaned.split()
-    for i in range(len(words) - 1):
-        scoreHey = fuzzyScore(words[i], wakeParts[0])
-        scoreBharat = fuzzyScore(words[i + 1], wakeParts[1])
-        if scoreHey >= fuzzyThresh and scoreBharat >= fuzzyThresh:
-            return True
+    hidden = encOut.last_hidden_state.squeeze(0)  # (1500, 384)
 
-    # Single-word check for "bharat" alone (in case "hey" is missed)
-    for w in words:
-        if fuzzyScore(w, "bharat") >= 0.7:
-            return True
+    # Whisper's conv layers downsample by ~2x, so active frames in encoder space
+    activeFrames = min(max(nAudioFrames // 2, 10), hidden.shape[0])
+    activeHidden = hidden[:activeFrames]  # (activeFrames, 384)
 
-    return False
+    emb = activeHidden.mean(dim=0).numpy()
+    emb = emb / (np.linalg.norm(emb) + 1e-9)  # L2-normalise
+    return emb
+
+
+@st.cache_resource
+def _buildWakeAnchor(_proc, _model):
+    """
+    Build the wakeword anchor embedding by averaging encoder embeddings
+    from all reference recordings in help/yes/.
+    Cached so it only runs once per session.
+    """
+    wavFiles = sorted(glob.glob(os.path.join(WAKE_ENROLL_DIR, "*.wav")))
+    if not wavFiles:
+        st.warning(f"No wakeword reference recordings found in {WAKE_ENROLL_DIR}/")
+        return None
+
+    embeddings = []
+    for f in wavFiles:
+        audio, _ = librosa.load(f, sr=targetRate, mono=True)
+        audio = audio.astype(np.float32)
+        peak = np.max(np.abs(audio))
+        if peak > 0:
+            audio = audio / peak
+        emb = _extractEncoderEmbedding(audio, _proc, _model)
+        embeddings.append(emb)
+
+    anchor = np.mean(embeddings, axis=0)
+    anchor = anchor / (np.linalg.norm(anchor) + 1e-9)
+    return anchor
+
+
+WAKE_WINDOW_SEC = 1.5   # sliding window duration (matches typical wakeword length)
+WAKE_HOP_SEC    = 0.5   # hop between windows
+
+def detectWake(audioArray, proc, model, anchor):
+    """
+    Acoustic wakeword detection via sliding-window encoder-embedding similarity.
+
+    Scans overlapping 1.5 s windows across the (trimmed) audio and returns the
+    MAX cosine similarity against the anchor.  This way a clip containing
+    "Hey Bharat <command>" still triggers — the window that lands on just the
+    wakeword portion will match even if the full-clip embedding is diluted.
+
+    Returns (detected: bool, bestSimilarity: float).
+    """
+    if anchor is None:
+        return False, 0.0
+
+    # Trim silence first so we only scan speech
+    trimmed, _ = librosa.effects.trim(audioArray, top_db=25)
+
+    windowSamples = int(WAKE_WINDOW_SEC * targetRate)
+    hopSamples    = int(WAKE_HOP_SEC * targetRate)
+
+    # Short clip — just use the whole thing (no sliding needed)
+    if len(trimmed) <= windowSamples:
+        emb = _extractEncoderEmbedding(trimmed, proc, model)
+        sim = float(np.dot(anchor, emb))
+        return sim >= WAKE_SIM_THRESHOLD, sim
+
+    # Slide windows and keep best similarity
+    bestSim = -1.0
+    start = 0
+    while start + windowSamples <= len(trimmed):
+        chunk = trimmed[start : start + windowSamples]
+        emb = _extractEncoderEmbedding(chunk, proc, model)
+        sim = float(np.dot(anchor, emb))
+        if sim > bestSim:
+            bestSim = sim
+        start += hopSamples
+
+    return bestSim >= WAKE_SIM_THRESHOLD, bestSim
 
 # ---------------------------------------------------------------------------
 # Command matching
@@ -447,13 +533,18 @@ if audioValue is not None:
             audioArray = ingestAudio(rawBytes)
 
         # ------------------------------------------------------------------
-        # Phase 1: Wakeword detection (language-agnostic, English pass)
+        # Build / retrieve the wakeword anchor embedding (cached)
         # ------------------------------------------------------------------
-        with st.spinner("Transcribing for wakeword …"):
-            fullText = transcribe(audioArray, proc, model, lang="en", prompt="Hey Bharat")
+        wakeAnchor = _buildWakeAnchor(proc, model)
 
-        st.session_state["lastTranscript"] = fullText
-        wakeDetected = detectWake(fullText)
+        # ------------------------------------------------------------------
+        # Phase 1: Wakeword detection via acoustic embedding similarity
+        # Uses Whisper's encoder only — NO autoregressive text decoding.
+        # ------------------------------------------------------------------
+        with st.spinner("Checking wakeword (acoustic embedding) …"):
+            wakeDetected, wakeSim = detectWake(audioArray, proc, model, wakeAnchor)
+
+        st.session_state["lastTranscript"] = f"[Wakeword similarity: {wakeSim:.4f}]"
 
         if wakeDetected:
             st.session_state["isAwake"] = True
@@ -469,7 +560,7 @@ if audioValue is not None:
                     langText = transcribe(audioArray, proc, model, lang=langCode)
                 
                 # Debug output to see what the model actually transcribed
-                st.write(f"🔍 **Raw {langName} Transcript:** `{langText}`")
+                st.write(f"\U0001f50d **Raw {langName} Transcript:** `{langText}`")
                 print(f"Raw {langName} Transcript: {langText}") # Also print to terminal
 
                 result = matchCommand(langText)

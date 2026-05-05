@@ -576,8 +576,49 @@ if audioValue is not None:
 
         st.rerun()
 
+
+# ---- Action UI Generator ----
+def get_action_ui(action_str):
+    action = action_str.lower()
+    animation_css = ""
+    emoji_html = ""
+    
+    if "turn on the light" in action:
+        animation_css = ".glow-bulb { font-size: 4rem; text-shadow: 0 0 20px #ffea00, 0 0 30px #ffea00; animation: pulse 2s infinite; } @keyframes pulse { 0% { text-shadow: 0 0 20px #ffea00; } 50% { text-shadow: 0 0 40px #ffea00, 0 0 60px #ffea00; } 100% { text-shadow: 0 0 20px #ffea00; } }"
+        emoji_html = '<div style="text-align:center;"><span class="glow-bulb">💡</span><br><b style="color:#ffea00">LIGHT ON</b></div>'
+    elif "turn off the light" in action:
+        animation_css = ".dim-bulb { font-size: 4rem; filter: grayscale(100%) opacity(50%); }"
+        emoji_html = '<div style="text-align:center;"><span class="dim-bulb">💡</span><br><b style="color:#666">LIGHT OFF</b></div>'
+    elif "turn on the fan" in action:
+        animation_css = ".spin-fan { font-size: 4rem; display: inline-block; animation: spin 0.5s linear infinite; } @keyframes spin { 100% { transform: rotate(360deg); } }"
+        emoji_html = '<div style="text-align:center;"><span class="spin-fan">🌀</span><br><b style="color:#00e5ff">FAN ON</b></div>'
+    elif "turn off the fan" in action:
+        animation_css = ".still-fan { font-size: 4rem; display: inline-block; filter: grayscale(100%); }"
+        emoji_html = '<div style="text-align:center;"><span class="still-fan">🌀</span><br><b style="color:#666">FAN OFF</b></div>'
+    elif "play music" in action:
+        animation_css = ".bounce-music { font-size: 4rem; display: inline-block; animation: bounce 1s infinite alternate; } @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-10px); } }"
+        emoji_html = '<div style="text-align:center;"><span class="bounce-music">🎵</span> 🔊<br><b style="color:#e91e63">PLAYING MUSIC</b></div>'
+    elif "stop music" in action:
+        animation_css = ".stop-music { font-size: 4rem; filter: grayscale(100%); }"
+        emoji_html = '<div style="text-align:center;"><span class="stop-music">🎵</span> 🔇<br><b style="color:#666">MUSIC STOPPED</b></div>'
+    elif "increase volume" in action:
+        animation_css = ".pump-vol { font-size: 4rem; display: inline-block; animation: pump 0.5s ease-out; } @keyframes pump { 50% { transform: scale(1.3); } 100% { transform: scale(1); } }"
+        emoji_html = '<div style="text-align:center;"><span class="pump-vol">🔊</span> 📈<br><b style="color:#4caf50">VOLUME INCREASED</b></div>'
+    elif "decrease volume" in action:
+        animation_css = ".drop-vol { font-size: 4rem; display: inline-block; animation: drop 0.5s ease-out; } @keyframes drop { 50% { transform: scale(0.7); } 100% { transform: scale(1); } }"
+        emoji_html = '<div style="text-align:center;"><span class="drop-vol">🔉</span> 📉<br><b style="color:#ff9800">VOLUME DECREASED</b></div>'
+    elif "tell the temperature" in action:
+        animation_css = ".temp-shake { font-size: 4rem; display: inline-block; animation: shake 2s infinite cubic-bezier(.36,.07,.19,.97) both; transform: translate3d(0, 0, 0); } @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }"
+        emoji_html = '<div style="text-align:center;"><span class="temp-shake">🌡️</span><br><b style="color:#ff5722">TEMPERATURE</b></div>'
+    elif "tell the time" in action:
+        animation_css = ".tick-tock { font-size: 4rem; display: inline-block; animation: tick 1s steps(2, end) infinite; } @keyframes tick { 0% { transform: rotate(0deg); } 100% { transform: rotate(15deg); } }"
+        emoji_html = '<div style="text-align:center;"><span class="tick-tock">🕒</span><br><b style="color:#9c27b0">TIME</b></div>'
+    
+    return f"<style>{animation_css}</style>\n<div style='margin: 20px 0; padding: 20px; background: rgba(0,0,0,0.1); border-radius: 15px;'>{emoji_html}</div>"
+
 # ---- Results box (clean card below kitten) ----
 if st.session_state["lastTranscript"] or st.session_state["matchedCmd"] is not None:
+
     transcript = st.session_state["lastTranscript"]
     cmd = st.session_state["matchedCmd"]
 
@@ -591,6 +632,7 @@ if st.session_state["lastTranscript"] or st.session_state["matchedCmd"] is not N
                 <p><b>Language:</b> {lang.capitalize()}</p>
                 <p><b>Command:</b> {native}</p>
                 <span class="actionTag">⚡ {action}</span>
+                {get_action_ui(action)}
             </div>
             """,
             unsafe_allow_html=True,

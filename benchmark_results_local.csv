@@ -1,0 +1,150 @@
+fileName,expectedAction,transcriptionPredicted,transcriptionSuccess,transcriptionMs,siamesePredicted,siameseSuccess,siameseMs,wakeDetected,wakeSim,wakeMs
+hi_recording1.wav,decrease volume,none,False,1192.0,decrease volume,True,144.0,True,0.9373,401.9
+hi_recording2.wav,decrease volume,decrease volume,True,473.9,decrease volume,True,176.9,True,0.9381,1077.5
+hi_recording3.wav,decrease volume,decrease volume,True,412.3,decrease volume,True,179.2,True,0.9668,1397.9
+hi_recording4.wav,decrease volume,none,False,1306.3,decrease volume,True,180.5,True,0.9293,388.2
+hi_recording5.wav,decrease volume,none,False,1520.7,decrease volume,True,191.3,True,0.9345,771.1
+ta_recording (1).wav,decrease volume,decrease volume,True,417.8,decrease volume,True,178.5,True,0.9279,193.3
+ta_recording (2).wav,decrease volume,decrease volume,True,519.1,decrease volume,True,361.2,True,0.9534,384.2
+ta_recording (3).wav,decrease volume,decrease volume,True,878.5,decrease volume,True,424.0,True,0.9247,375.2
+ta_recording (4).wav,decrease volume,decrease volume,True,894.0,increase volume,False,392.4,True,0.9248,1275.7
+ta_recording (5).wav,decrease volume,decrease volume,True,1066.4,decrease volume,True,363.1,True,0.9465,776.2
+te_Recording (1).wav,decrease volume,decrease volume,True,978.9,decrease volume,True,371.7,True,0.9246,824.0
+te_Recording (2).wav,decrease volume,decrease volume,True,808.9,decrease volume,True,388.3,True,0.9230,805.7
+te_Recording (3).wav,decrease volume,none,False,12809.8,decrease volume,True,319.9,True,0.9230,855.1
+te_Recording (4).wav,decrease volume,decrease volume,True,728.1,decrease volume,True,305.5,True,0.9315,1071.7
+te_Recording (5).wav,decrease volume,decrease volume,True,683.5,decrease volume,True,302.8,False,0.9103,329.1
+hi_recording1.wav,increase volume,none,False,9125.8,increase volume,True,168.3,True,0.9420,651.0
+hi_recording2.wav,increase volume,increase volume,True,409.5,increase volume,True,166.3,True,0.9593,881.7
+hi_recording3.wav,increase volume,none,False,7641.7,increase volume,True,182.3,True,0.9428,966.2
+hi_recording4.wav,increase volume,none,False,12385.0,increase volume,True,319.2,False,0.9213,387.5
+hi_recording5.wav,increase volume,none,False,2430.8,increase volume,True,308.7,True,0.9511,1755.6
+ta_recording (1).wav,increase volume,increase volume,True,1582.3,increase volume,True,278.0,True,0.9458,1317.8
+ta_recording (2).wav,increase volume,increase volume,True,1606.7,increase volume,True,293.2,True,0.9357,1010.2
+ta_recording (3).wav,increase volume,increase volume,True,2083.6,increase volume,True,311.5,False,0.9155,1347.6
+ta_recording (4).wav,increase volume,increase volume,True,706.8,increase volume,True,339.5,True,0.9318,749.7
+ta_recording (5).wav,increase volume,none,False,2567.8,increase volume,True,337.6,True,0.9351,722.0
+te_Recording (1).wav,increase volume,increase volume,True,680.0,increase volume,True,350.6,False,0.9203,727.0
+te_Recording (2).wav,increase volume,increase volume,True,722.0,increase volume,True,348.7,False,0.8926,358.9
+te_Recording (3).wav,increase volume,increase volume,True,700.3,increase volume,True,289.6,False,0.9045,750.1
+te_Recording (4).wav,increase volume,increase volume,True,655.6,decrease volume,False,303.4,False,0.9175,650.0
+te_Recording (5).wav,increase volume,none,False,1407.2,decrease volume,False,171.4,False,0.9166,640.0
+hi_recording1.wav,play music,play music,True,475.0,play music,True,178.4,True,0.9391,370.7
+hi_recording2.wav,play music,play music,True,384.4,play music,True,176.5,True,0.9384,195.6
+hi_recording3.wav,play music,play music,True,378.0,play music,True,177.0,True,0.9271,375.0
+hi_recording4.wav,play music,play music,True,402.8,play music,True,185.3,True,0.9463,965.5
+hi_recording5.wav,play music,none,False,7653.6,play music,True,172.9,True,0.9494,1204.7
+ta_recad.wav,play music,play music,True,1002.6,play music,True,184.6,True,0.9411,186.3
+ta_recad2.wav,play music,play music,True,854.9,play music,True,178.1,True,0.9228,383.4
+ta_recad3.wav,play music,none,False,1309.8,play music,True,175.2,True,0.9395,186.7
+ta_recad4.wav,play music,play music,True,845.8,stop music,False,169.2,True,0.9414,183.4
+te_Recording (1).wav,play music,none,False,10868.8,play music,True,330.9,True,0.9252,182.3
+te_Recording (2).wav,play music,none,False,2092.1,play music,True,365.2,False,0.9118,351.2
+te_Recording (3).wav,play music,play music,True,2514.4,play music,True,308.1,False,0.9127,792.7
+te_Recording (4).wav,play music,play music,True,2301.2,play music,True,320.8,True,0.9313,702.0
+te_Recording (5).wav,play music,none,False,12186.2,play music,True,297.3,True,0.9230,343.9
+hi_recording1.wav,stop music,none,False,2250.1,stop music,True,292.8,True,0.9510,2179.9
+hi_recording2.wav,stop music,stop music,True,705.3,stop music,True,286.1,True,0.9505,1358.0
+hi_recording3.wav,stop music,none,False,2337.2,stop music,True,307.7,True,0.9236,329.2
+hi_recording4.wav,stop music,stop music,True,299.5,stop music,True,167.9,True,0.9651,834.5
+hi_recording5.wav,stop music,none,False,1452.4,stop music,True,181.6,True,0.9352,361.8
+ta_recording (1).wav,stop music,stop music,True,937.3,stop music,True,177.9,False,0.9171,185.8
+ta_recording (2).wav,stop music,none,False,7854.8,stop music,True,180.8,True,0.9238,186.9
+ta_recording (3).wav,stop music,stop music,True,900.5,stop music,True,171.6,False,0.9146,363.1
+ta_recording (4).wav,stop music,stop music,True,933.5,stop music,True,171.2,True,0.9431,573.6
+ta_recording (5).wav,stop music,none,False,1321.4,stop music,True,173.6,True,0.9346,362.5
+te_Recording (1).wav,stop music,stop music,True,378.7,stop music,True,183.1,False,0.9165,186.6
+te_Recording (2).wav,stop music,none,False,2348.7,stop music,True,306.4,True,0.9253,489.5
+te_Recording (3).wav,stop music,stop music,True,632.2,stop music,True,321.4,False,0.9177,372.2
+te_Recording (4).wav,stop music,stop music,True,685.9,stop music,True,325.3,False,0.9166,338.9
+te_Recording (5).wav,stop music,stop music,True,732.9,stop music,True,405.9,True,0.9237,688.2
+hi_recording1.wav,tell the temperature,tell the temperature,True,844.6,tell the temperature,True,351.5,True,0.9427,914.6
+hi_recording2.wav,tell the temperature,tell the temperature,True,642.8,tell the temperature,True,311.2,True,0.9579,2440.9
+hi_recording3.wav,tell the temperature,tell the temperature,True,611.2,tell the temperature,True,316.9,True,0.9428,349.0
+hi_recording4.wav,tell the temperature,tell the temperature,True,577.7,tell the temperature,True,308.8,True,0.9666,1388.2
+hi_recording5.wav,tell the temperature,tell the temperature,True,650.4,tell the temperature,True,339.8,True,0.9450,1451.9
+ta_recording (1).wav,tell the temperature,none,False,2443.6,tell the temperature,True,296.6,True,0.9480,1035.9
+ta_recording (2).wav,tell the temperature,none,False,2296.6,tell the temperature,True,306.9,False,0.9087,315.5
+ta_recording (3).wav,tell the temperature,none,False,2058.8,tell the temperature,True,295.8,False,0.9200,991.5
+ta_recording (4).wav,tell the temperature,none,False,2181.4,tell the temperature,True,304.8,True,0.9270,651.6
+ta_recording (5).wav,tell the temperature,tell the temperature,True,1437.9,tell the temperature,True,290.8,True,0.9445,967.3
+te_Recording (1).wav,tell the temperature,stop music,False,728.9,tell the temperature,True,300.7,False,0.9022,667.7
+te_Recording (2).wav,tell the temperature,tell the temperature,True,739.0,tell the temperature,True,349.4,False,0.9116,987.9
+te_Recording (3).wav,tell the temperature,tell the temperature,True,776.9,tell the temperature,True,372.0,False,0.9152,349.5
+te_Recording (4).wav,tell the temperature,tell the temperature,True,2468.7,tell the temperature,True,198.7,True,0.9245,850.9
+te_Recording (5).wav,tell the temperature,tell the temperature,True,566.4,tell the temperature,True,210.2,False,0.9099,215.4
+hi_recording1.wav,tell the time,tell the time,True,454.4,tell the time,True,207.1,True,0.9342,420.7
+hi_recording2.wav,tell the time,tell the time,True,413.7,tell the time,True,206.8,True,0.9298,1224.2
+hi_recording3.wav,tell the time,none,False,1517.9,tell the time,True,182.7,True,0.9263,202.5
+hi_recording4.wav,tell the time,tell the time,True,347.0,tell the time,True,177.4,True,0.9499,1155.9
+hi_recording5.wav,tell the time,none,False,1536.0,tell the time,True,200.1,False,0.9198,387.2
+ta_recording (1).wav,tell the time,tell the time,True,423.1,tell the time,True,206.3,False,0.9164,378.0
+ta_recording (2).wav,tell the time,tell the time,True,411.2,tell the time,True,182.0,True,0.9311,221.4
+ta_recording (3).wav,tell the time,tell the time,True,400.4,tell the time,True,193.0,True,0.9325,391.9
+ta_recording (4).wav,tell the time,tell the time,True,407.3,tell the time,True,178.7,True,0.9386,184.3
+ta_recording (5).wav,tell the time,tell the time,True,382.2,tell the time,True,174.9,True,0.9247,387.2
+te_Recording (1).wav,tell the time,tell the time,True,407.8,tell the time,True,172.6,False,0.8986,189.0
+te_Recording (2).wav,tell the time,tell the time,True,388.5,tell the time,True,184.6,False,0.9135,185.4
+te_Recording (3).wav,tell the time,tell the time,True,539.8,tell the time,True,342.3,False,0.9042,196.0
+te_Recording (4).wav,tell the time,tell the time,True,666.5,tell the time,True,314.5,False,0.8932,734.7
+te_Recording (5).wav,tell the time,tell the time,True,883.5,tell the time,True,329.7,False,0.8975,546.3
+hi_recording1.wav,turn off the fan,none,False,2526.7,turn off the fan,True,303.0,True,0.9476,1108.6
+hi_recording2.wav,turn off the fan,none,False,2341.9,turn off the fan,True,308.3,True,0.9661,1304.1
+hi_recording3.wav,turn off the fan,turn off the fan,True,2396.6,turn off the fan,True,293.6,True,0.9678,1352.5
+hi_recording4.wav,turn off the fan,turn off the fan,True,2390.1,turn off the fan,True,281.4,False,0.8906,323.2
+hi_recording5.wav,turn off the fan,none,False,2131.4,turn off the fan,True,311.7,True,0.9433,1609.8
+ta_recording (1).wav,turn off the fan,turn off the fan,True,2378.8,turn off the fan,True,320.0,True,0.9223,669.3
+ta_recording (2).wav,turn off the fan,turn off the fan,True,777.9,turn off the fan,True,355.2,True,0.9291,771.1
+ta_recording (3).wav,turn off the fan,none,False,2448.5,turn off the fan,True,338.7,False,0.9162,420.2
+ta_recording (4).wav,turn off the fan,none,False,2462.8,turn off the fan,True,349.0,False,0.8915,377.8
+ta_recording (5).wav,turn off the fan,turn off the fan,True,1517.7,turn off the fan,True,228.3,True,0.9493,1245.2
+te_Recording (1).wav,turn off the fan,turn off the fan,True,362.4,turn off the fan,True,188.1,False,0.9172,181.7
+te_Recording (2).wav,turn off the fan,turn off the fan,True,369.1,turn off the fan,True,181.5,True,0.9225,197.3
+te_Recording (3).wav,turn off the fan,turn off the fan,True,324.1,turn off the fan,True,182.6,False,0.9185,367.0
+te_Recording (4).wav,turn off the fan,turn off the fan,True,369.5,turn off the fan,True,185.8,True,0.9288,599.2
+te_Recording (5).wav,turn off the fan,none,False,1206.2,turn off the fan,True,175.6,False,0.9140,202.0
+hi_recording1.wav,turn off the light,turn off the light,True,461.3,turn off the light,True,195.6,True,0.9377,630.9
+hi_recording2.wav,turn off the light,turn off the light,True,472.0,turn off the light,True,178.4,True,0.9354,381.7
+hi_recording3.wav,turn off the light,turn off the light,True,478.0,turn off the light,True,180.4,False,0.9100,191.4
+hi_recording4.wav,turn off the light,turn off the light,True,435.5,turn off the fan,False,192.7,True,0.9551,1594.6
+hi_recording5.wav,turn off the light,turn off the light,True,551.2,turn off the light,True,196.5,True,0.9243,419.1
+ta_Recording (1).wav,turn off the light,none,False,1657.7,turn off the light,True,201.7,True,0.9250,207.2
+ta_Recording (2).wav,turn off the light,none,False,1246.2,turn off the light,True,198.2,False,0.9045,215.8
+ta_Recording (3).wav,turn off the light,none,False,10076.9,turn off the light,True,337.2,False,0.9202,209.3
+ta_Recording (4).wav,turn off the light,none,False,2416.2,turn off the light,True,341.1,True,0.9435,1152.2
+ta_Recording (5).wav,turn off the light,turn off the light,True,792.9,turn off the light,True,352.0,True,0.9312,738.0
+te_Recording (1).wav,turn off the light,turn off the light,True,698.9,turn off the light,True,399.9,False,0.9104,408.3
+te_Recording (2).wav,turn off the light,turn off the light,True,833.8,turn off the light,True,400.6,False,0.9185,433.8
+te_Recording (3).wav,turn off the light,turn off the light,True,701.4,turn off the light,True,361.3,False,0.9144,816.9
+te_Recording (4).wav,turn off the light,turn off the light,True,760.8,turn off the light,True,349.5,False,0.9082,363.0
+te_Recording (5).wav,turn off the light,turn off the light,True,656.3,turn off the light,True,371.6,False,0.9068,755.6
+hi_recording1.wav,turn on the fan,turn on the fan,True,747.9,turn on the fan,True,408.9,True,0.9729,1144.5
+hi_recording2.wav,turn on the fan,none,False,2767.7,turn on the fan,True,376.9,True,0.9568,1571.0
+hi_recording3.wav,turn on the fan,turn on the fan,True,1239.8,turn on the fan,True,667.6,False,0.9108,516.1
+hi_recording4.wav,turn on the fan,turn on the fan,True,857.3,turn off the fan,False,363.0,True,0.9593,2269.3
+hi_recording5.wav,turn on the fan,turn on the fan,True,738.6,turn on the fan,True,407.6,True,0.9665,1214.0
+ta_recording (1).wav,turn on the fan,turn on the fan,True,2714.2,turn on the fan,True,398.7,True,0.9246,445.9
+ta_recording (2).wav,turn on the fan,none,False,2083.5,turn on the fan,True,329.4,True,0.9271,452.5
+ta_recording (3).wav,turn on the fan,turn on the fan,True,641.1,turn on the fan,True,314.3,True,0.9458,1061.9
+ta_recording (4).wav,turn on the fan,turn on the fan,True,375.0,turn on the fan,True,173.5,True,0.9430,800.3
+ta_recording (5).wav,turn on the fan,turn on the fan,True,1400.8,turn on the fan,True,288.3,True,0.9264,188.5
+te_Recording (1).wav,turn on the fan,turn on the fan,True,537.1,turn on the fan,True,297.4,False,0.8987,298.3
+te_Recording (2).wav,turn on the fan,turn on the fan,True,466.9,turn on the fan,True,205.0,False,0.9111,643.0
+te_Recording (3).wav,turn on the fan,turn on the fan,True,564.1,turn on the fan,True,369.5,True,0.9252,294.9
+te_Recording (4).wav,turn on the fan,turn on the fan,True,490.8,turn on the fan,True,218.7,True,0.9242,785.5
+te_Recording (5).wav,turn on the fan,none,False,1702.0,turn on the fan,True,227.3,True,0.9263,283.8
+hi_recording1.wav,turn on the light,turn on the light,True,391.7,turn on the light,True,191.5,False,0.9215,428.1
+hi_recording2.wav,turn on the light,turn on the light,True,371.1,turn on the light,True,176.8,True,0.9353,402.3
+hi_recording3.wav,turn on the light,turn on the light,True,415.6,turn on the light,True,183.0,False,0.9183,185.7
+hi_recording4.wav,turn on the light,turn on the light,True,416.5,turn on the light,True,185.3,False,0.9191,369.8
+hi_recording5.wav,turn on the light,turn on the light,True,414.9,turn on the light,True,171.8,True,0.9295,401.6
+ta_Recording (1).wav,turn on the light,turn on the light,True,974.1,turn on the light,True,183.4,True,0.9252,366.8
+ta_Recording (2).wav,turn on the light,turn on the light,True,814.3,turn on the light,True,171.8,False,0.9217,182.3
+ta_Recording (3).wav,turn on the light,turn on the light,True,1267.9,turn on the light,True,177.7,True,0.9284,183.5
+ta_Recording (4).wav,turn on the light,decrease volume,False,423.9,turn on the light,True,182.5,False,0.9182,580.7
+ta_Recording (5).wav,turn on the light,turn on the light,True,1157.2,turn on the light,True,295.9,True,0.9250,194.2
+te_Recording (1).wav,turn on the light,turn on the light,True,601.6,turn on the light,True,358.7,False,0.8964,354.3
+te_Recording (2).wav,turn on the light,none,False,2573.0,turn on the light,True,433.1,False,0.9024,379.4
+te_Recording (3).wav,turn on the light,turn on the light,True,719.2,turn on the light,True,382.2,False,0.9063,798.2
+te_Recording (4).wav,turn on the light,turn on the light,True,679.9,turn on the light,True,344.0,False,0.9113,392.5
+te_Recording (5).wav,turn on the light,none,False,2417.2,turn on the light,True,385.4,False,0.9081,803.2

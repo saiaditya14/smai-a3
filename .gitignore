@@ -84,3 +84,10 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Project-specific
+_siamese_embeddings.npz
+*.log
+*.pdf
+benchmark_results_fleurs.csv
+benchmark_results_raw.csv

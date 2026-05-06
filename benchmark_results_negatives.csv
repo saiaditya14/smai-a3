@@ -1,0 +1,106 @@
+pool,fileName,wakeDetected,wakeSim,transcriptionFiredCommand,siameseFiredCommand
+data_none,hi_recording1.wav,False,0.9060,False,False
+data_none,hi_recording10.wav,False,0.8918,False,False
+data_none,hi_recording11.wav,False,0.8735,False,False
+data_none,hi_recording12.wav,False,0.8826,False,False
+data_none,hi_recording13.wav,False,0.8730,False,False
+data_none,hi_recording14.wav,False,0.8846,False,False
+data_none,hi_recording15.wav,False,0.8654,False,False
+data_none,hi_recording16.wav,False,0.8863,False,False
+data_none,hi_recording17.wav,False,0.8641,False,False
+data_none,hi_recording18.wav,False,0.8774,False,False
+data_none,hi_recording19.wav,False,0.8780,False,False
+data_none,hi_recording2.wav,False,0.8884,False,False
+data_none,hi_recording20.wav,False,0.8743,False,False
+data_none,hi_recording21.wav,False,0.8822,False,False
+data_none,hi_recording22.wav,False,0.8682,False,False
+data_none,hi_recording23.wav,False,0.8767,False,False
+data_none,hi_recording24.wav,False,0.8744,False,False
+data_none,hi_recording25.wav,False,0.8870,False,False
+data_none,hi_recording26.wav,False,0.8858,False,False
+data_none,hi_recording27.wav,False,0.8636,False,False
+data_none,hi_recording28.wav,False,0.8944,False,False
+data_none,hi_recording29.wav,False,0.8801,False,False
+data_none,hi_recording3.wav,False,0.8818,False,False
+data_none,hi_recording30.wav,False,0.8844,False,False
+data_none,hi_recording31.wav,False,0.8943,False,False
+data_none,hi_recording32.wav,False,0.8774,False,False
+data_none,hi_recording33.wav,False,0.9070,False,False
+data_none,hi_recording34.wav,False,0.8772,False,False
+data_none,hi_recording35.wav,False,0.8955,False,False
+data_none,hi_recording36.wav,False,0.8791,False,False
+data_none,hi_recording37.wav,False,0.8669,False,False
+data_none,hi_recording38.wav,False,0.8769,False,False
+data_none,hi_recording39.wav,False,0.8681,False,False
+data_none,hi_recording4.wav,False,0.8659,False,False
+data_none,hi_recording40.wav,False,0.8726,False,False
+data_none,hi_recording41.wav,False,0.8933,False,False
+data_none,hi_recording42.wav,False,0.8777,False,False
+data_none,hi_recording43.wav,False,0.8758,False,False
+data_none,hi_recording44.wav,False,0.8872,False,False
+data_none,hi_recording45.wav,False,0.8887,False,False
+data_none,hi_recording46.wav,False,0.8817,False,False
+data_none,hi_recording47.wav,False,0.8652,False,False
+data_none,hi_recording48.wav,False,0.8887,False,False
+data_none,hi_recording49.wav,False,0.8736,False,False
+data_none,hi_recording5.wav,False,0.8747,False,False
+data_none,hi_recording50.wav,False,0.8695,False,False
+data_none,hi_recording6.wav,False,0.8973,False,False
+data_none,hi_recording7.wav,False,0.8955,False,False
+data_none,hi_recording8.wav,False,0.8967,False,False
+data_none,hi_recording9.wav,False,0.8676,False,False
+data_none,te_Recording (1).wav,False,0.8863,False,False
+data_none,te_Recording (10).wav,False,0.8771,False,False
+data_none,te_Recording (11).wav,False,0.9009,False,False
+data_none,te_Recording (12).wav,False,0.8861,False,False
+data_none,te_Recording (13).wav,False,0.8987,False,False
+data_none,te_Recording (14).wav,False,0.8876,False,False
+data_none,te_Recording (15).wav,False,0.8918,False,False
+data_none,te_Recording (16).wav,False,0.8783,False,False
+data_none,te_Recording (17).wav,False,0.8778,False,False
+data_none,te_Recording (18).wav,False,0.8901,False,False
+data_none,te_Recording (19).wav,False,0.8746,False,False
+data_none,te_Recording (2).wav,False,0.8732,False,False
+data_none,te_Recording (20).wav,False,0.8647,False,False
+data_none,te_Recording (21).wav,False,0.8904,False,False
+data_none,te_Recording (22).wav,False,0.8903,False,False
+data_none,te_Recording (23).wav,False,0.8821,False,False
+data_none,te_Recording (24).wav,False,0.8681,False,False
+data_none,te_Recording (25).wav,False,0.8917,False,False
+data_none,te_Recording (26).wav,False,0.8636,False,False
+data_none,te_Recording (27).wav,False,0.8678,False,False
+data_none,te_Recording (28).wav,False,0.8602,False,False
+data_none,te_Recording (29).wav,False,0.8605,False,False
+data_none,te_Recording (3).wav,False,0.8765,False,False
+data_none,te_Recording (30).wav,False,0.8635,False,False
+data_none,te_Recording (31).wav,False,0.8734,False,False
+data_none,te_Recording (32).wav,False,0.8703,False,False
+data_none,te_Recording (33).wav,False,0.8800,False,False
+data_none,te_Recording (34).wav,False,0.8659,False,False
+data_none,te_Recording (35).wav,False,0.8689,False,False
+data_none,te_Recording (36).wav,False,0.8598,False,False
+data_none,te_Recording (37).wav,False,0.8622,False,False
+data_none,te_Recording (38).wav,False,0.8675,False,False
+data_none,te_Recording (39).wav,False,0.8727,False,False
+data_none,te_Recording (4).wav,False,0.8914,False,False
+data_none,te_Recording (40).wav,False,0.8624,False,False
+data_none,te_Recording (41).wav,False,0.8616,False,False
+data_none,te_Recording (42).wav,False,0.8703,False,False
+data_none,te_Recording (43).wav,False,0.8365,False,False
+data_none,te_Recording (44).wav,False,0.8557,False,False
+data_none,te_Recording (45).wav,False,0.8709,False,False
+data_none,te_Recording (46).wav,False,0.8423,False,False
+data_none,te_Recording (47).wav,False,0.8686,False,False
+data_none,te_Recording (48).wav,False,0.8235,False,False
+data_none,te_Recording (49).wav,False,0.8612,False,False
+data_none,te_Recording (5).wav,False,0.8955,False,False
+data_none,te_Recording (50).wav,False,0.8691,False,False
+data_none,te_Recording (6).wav,False,0.8552,False,False
+data_none,te_Recording (7).wav,False,0.8641,False,False
+data_none,te_Recording (8).wav,False,0.8752,False,False
+data_none,te_Recording (9).wav,False,0.8737,False,False
+help_no,no.wav,True,0.9428,False,True
+help_no,recording (1).wav,True,0.9381,False,True
+help_no,recording (3).wav,True,0.9260,False,True
+help_no,recording (4).wav,False,0.9111,False,False
+help_no,recording (6).wav,True,0.9293,False,True

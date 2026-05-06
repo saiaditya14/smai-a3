@@ -318,8 +318,12 @@ A can be slower on longer recordings because it may run the autoregressive
 decoder once per language, while Path B uses a single encoder pass and nearest
 prototype lookup. For the submitted T11.7 prototype, Path B is the default
 because the command set and target languages are fixed. Path A remains useful
-as a fallback and debug path, especially when a recording contains only the
-wakeword or when a future command/language must be added without retraining.
+as a fallback, debug path, and semantic validator. In a future consensus mode,
+Path B can propose the fast embedding-space command while Path A checks whether
+the decoded transcript contains any dictionary-supported intent. If Path A sees
+only the wakeword or no plausible command phrase, it can veto Path B's nearest
+prototype. This would make Path A more than a backup recogniser: it becomes a
+guard against Path B over-interpreting wakeword-only or out-of-set speech.
 
 \section{Ablations}
 
@@ -460,14 +464,32 @@ The biggest production upgrade would be more data. The next collection round
 should target both quantity and diversity: phone microphones, laptop
 microphones, headsets, noisy rooms, different distances from the microphone,
 soft/loud speech, fast/slow speech, multiple accents, more speakers per
-language, longer conversational negatives, and wakeword-only clips. This would
-make threshold calibration more reliable for the deployed app and would also
-let the reject class learn a broader boundary around real non-command speech.
+language, longer conversational negatives, and wakeword-only clips. Since the
+prototype is built in Hyderabad, a useful extension would be to explicitly
+collect regional Hindi variants such as Dakhini/Hyderabadi-influenced speech,
+along with vocabulary alternations like ``light on karo'' versus ``batti
+jalao''. This would stress both Path A's dictionary coverage and Path B's
+acoustic intent prototypes. Broader data would make threshold calibration more
+reliable for the deployed app and would also let the reject class learn a
+broader boundary around real non-command speech.
+
+A second production direction is stronger open-set decision making. Path B
+already compares each projected embedding to command prototypes; this distance
+or cosine similarity can be calibrated into a maximum-distance threshold
+$d_{\max}$. If the nearest prototype is still too far away, the app should
+return ``command not recognised'' instead of choosing the closest known command.
+Together with a hybrid consensus mode where Path A can veto Path B when no
+semantic command phrase is transcribed, this would reduce hallucinated actions
+on wakeword-only and out-of-set inputs.
+
 For model adaptation, a LoRA fine-tune of Whisper-tiny or a multilingual
 projection head trained with more languages could improve Path A transcription
-and reduce Path B's weak cross-language hold-out behaviour. Finally, the app
-could log anonymised failure cases with user consent so that future retraining
-focuses on real deployment errors rather than only synthetic perturbations.
+and reduce Path B's weak cross-language hold-out behaviour. For deployment,
+INT8 quantisation of Whisper-tiny and the projection head would be a natural
+CPU optimisation, potentially reducing Path B's roughly 730 ms latency without
+changing the high-level architecture. Finally, the app could log anonymised
+failure cases with user consent so that future retraining focuses on real
+deployment errors rather than only synthetic perturbations.
 
 \section{Conclusion}
 

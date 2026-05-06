@@ -433,17 +433,41 @@ clips were not used to train the reject prototype.
 
 First, the command-specific dataset starts from 149 independent recordings.
 Augmentation is a valid speech-learning tool and is part of the training
-pipeline, but a larger original corpus across more microphones, speakers, and
-rooms would still make the robustness claims stronger. Second, the wakeword
-threshold is fixed at 0.910 and was tuned on the team's recordings; deployment
-on weaker laptop or browser microphones may benefit from a broader calibration
-set. Third, Path B does not generalise well to held-out languages, so adding a
-new Indic language requires new recordings and retraining. Fourth, the
-wakeword gate is permissive on hard negatives; the submitted system relies on
-the second-stage recogniser and reject prototype to suppress command false
+pipeline, but the main barrier to production quality is still data scale and
+coverage. A larger original corpus across many more speakers, accents,
+microphones, rooms, background noises, speaking speeds, and near-miss negative
+phrases would be the most reliable way to improve robustness. Second, the
+wakeword threshold is fixed at 0.910 and was tuned on the team's recordings;
+deployment on weaker laptop or browser microphones may benefit from a broader
+calibration set. Third, Path B does not generalise well to held-out languages,
+so adding a new Indic language requires new recordings and retraining. Fourth,
+the wakeword gate is permissive on hard negatives; the submitted system relies
+on the second-stage recogniser and reject prototype to suppress command false
 positives. Finally, the system does not fine-tune Whisper-tiny itself. Future
 work could train a LoRA adapter or a small wakeword-only classifier to decide
 whether speech after the wakeword contains an actual command.
+
+\section{Future Work}
+
+The most direct next step is a stronger wakeword module. The current cosine
+gate is simple and CPU-friendly, but a small binary classifier over Whisper
+encoder embeddings could reduce hard-negative triggers while preserving recall
+for real ``Hey Bharat'' utterances. A second lightweight classifier could
+separate wakeword-only audio from wakeword-plus-command audio, preventing the
+command head from over-interpreting bare wakeword clips.
+
+The biggest production upgrade would be more data. The next collection round
+should target both quantity and diversity: phone microphones, laptop
+microphones, headsets, noisy rooms, different distances from the microphone,
+soft/loud speech, fast/slow speech, multiple accents, more speakers per
+language, longer conversational negatives, and wakeword-only clips. This would
+make threshold calibration more reliable for the deployed app and would also
+let the reject class learn a broader boundary around real non-command speech.
+For model adaptation, a LoRA fine-tune of Whisper-tiny or a multilingual
+projection head trained with more languages could improve Path A transcription
+and reduce Path B's weak cross-language hold-out behaviour. Finally, the app
+could log anonymised failure cases with user consent so that future retraining
+focuses on real deployment errors rather than only synthetic perturbations.
 
 \section{Conclusion}
 

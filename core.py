@@ -30,13 +30,16 @@ import librosa
 
 targetRate = 16000
 
-WAKE_ENROLL_DIR    = os.path.join(os.path.dirname(__file__) or ".", "help", "yes")
-WAKE_SIM_THRESHOLD = 0.922
+BASE_DIR = os.path.dirname(__file__) or "."
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+
+WAKE_ENROLL_DIR    = os.path.join(BASE_DIR, "help", "yes")
+WAKE_SIM_THRESHOLD = 0.910  # Adjusted for pitch augmentation
 WAKE_WINDOW_SEC    = 1.5
 WAKE_HOP_SEC       = 0.5
 
-SIAMESE_HEAD_PATH  = os.path.join(os.path.dirname(__file__) or ".", "siamese_head.pt")
-SIAMESE_PROTOS_PATH = os.path.join(os.path.dirname(__file__) or ".", "siamese_prototypes.npz")
+SIAMESE_HEAD_PATH  = os.path.join(MODELS_DIR, "siamese_head.pt")
+SIAMESE_PROTOS_PATH = os.path.join(MODELS_DIR, "siamese_prototypes.npz")
 SIAMESE_SIM_THRESHOLD = 0.6  # below this, the siamese path returns None
 
 
@@ -186,7 +189,7 @@ def _extractEncoderEmbedding(audioArray, proc, model):
 
 
 def buildWakeAnchor(proc, model, enrollDir=None):
-    """Average encoder embeddings across reference 'Hey Bharat' recordings."""
+    """Average encoder embeddings across reference 'Hey Bharat' recordings with pitch augmentation."""
     enrollDir = enrollDir or WAKE_ENROLL_DIR
     wavFiles = sorted(glob.glob(os.path.join(enrollDir, "*.wav")))
     if not wavFiles:
@@ -195,6 +198,11 @@ def buildWakeAnchor(proc, model, enrollDir=None):
     for f in wavFiles:
         audio = loadWavFile(f)
         embeddings.append(_extractEncoderEmbedding(audio, proc, model))
+        # Augment with higher (female/child) and lower pitch variants
+        for steps in [3, 6, -3]: 
+            shifted = librosa.effects.pitch_shift(y=audio, sr=targetRate, n_steps=steps)
+            embeddings.append(_extractEncoderEmbedding(shifted, proc, model))
+            
     anchor = np.mean(embeddings, axis=0)
     anchor = anchor / (np.linalg.norm(anchor) + 1e-9)
     return anchor
@@ -367,7 +375,7 @@ def classifyBySiamese(audioArray, proc, model, head, prototypes, idx_to_action,
     if bestSim < threshold or bestIdx is None:
         return None, bestSim
     action = idx_to_action[bestIdx]  # e.g. "turn on the light"
-    if action == "reject":
+    if action == "__reject__":
         return None, bestSim
     return ("auto", action, action.title()), bestSim
 

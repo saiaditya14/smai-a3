@@ -24,6 +24,13 @@ from core import (
     classifyBySiamese, loadSiameseAssets, loadWavFile,
 )
 
+RESULTS_DIR = os.path.join(os.path.dirname(__file__) or ".", "results")
+
+
+def resultPath(fileName):
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    return os.path.join(RESULTS_DIR, fileName)
+
 
 def ensureNewline(filePath):
     if os.path.exists(filePath) and os.path.getsize(filePath) > 0:
@@ -41,7 +48,7 @@ def evaluateFleursWer():
     from datasets import load_dataset
     from jiwer import wer
     proc, model = loadModel()
-    outCsv = "benchmark_results_fleurs.csv"
+    outCsv = resultPath("benchmark_results_fleurs.csv")
     ensureNewline(outCsv)
 
     with open(outCsv, "a", newline="", encoding="utf-8") as f:
@@ -117,6 +124,11 @@ def _iterNegatives(dataDir):
         for fileName in sorted(os.listdir(helpNoPath)):
             if fileName.lower().endswith(".wav"):
                 yield "help_no", os.path.join(helpNoPath, fileName)
+    helpNoTestPath = os.path.join(os.path.dirname(__file__) or ".", "help", "no_test")
+    if os.path.isdir(helpNoTestPath):
+        for fileName in sorted(os.listdir(helpNoTestPath)):
+            if fileName.lower().endswith(".wav"):
+                yield "help_no_test", os.path.join(helpNoTestPath, fileName)
 
 
 def evaluateLocalCommands(dataDir, skip_wake=False, run_siamese=True):
@@ -131,7 +143,7 @@ def evaluateLocalCommands(dataDir, skip_wake=False, run_siamese=True):
                   "Run `python ablation_siamese.py` to generate them.")
             run_siamese = False
 
-    outCsv = "benchmark_results_local.csv"
+    outCsv = resultPath("benchmark_results_local.csv")
     fields = [
         "fileName", "expectedAction",
         "transcriptionPredicted", "transcriptionSuccess", "transcriptionMs",
@@ -207,7 +219,7 @@ def evaluateNegatives(dataDir, run_siamese=True):
         if siamese_head is None:
             run_siamese = False
 
-    outCsv = "benchmark_results_negatives.csv"
+    outCsv = resultPath("benchmark_results_negatives.csv")
     fields = ["pool", "fileName", "wakeDetected", "wakeSim",
               "transcriptionFiredCommand", "siameseFiredCommand"]
     with open(outCsv, "w", newline="", encoding="utf-8") as f:

@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit.components.v1 import html as renderHtml
 import hashlib
 import time
+import os
 
 import core
 from core import (
@@ -14,13 +15,13 @@ from core import (
 # ---------------------------------------------------------------------------
 
 try:
-    with open("sleeping_kitten.svg", "r", encoding="utf-8") as f:
+    with open(os.path.join("assets", "sleeping_kitten.svg"), "r", encoding="utf-8") as f:
         sleepingSvg = f.read()
 except FileNotFoundError:
     sleepingSvg = "<svg>Sleeping SVG Not Found</svg>"
 
 try:
-    with open("awake__kitten.svg", "r", encoding="utf-8") as f:
+    with open(os.path.join("assets", "awake__kitten.svg"), "r", encoding="utf-8") as f:
         awakeSvg = f.read()
 except FileNotFoundError:
     awakeSvg = "<svg>Awake SVG Not Found</svg>"
@@ -217,6 +218,8 @@ if audioValue is not None:
 
             if transcriptText:
                 st.session_state["lastTranscript"] = transcriptText
+            elif mode == "Siamese (projection head)":
+                st.session_state["lastTranscript"] = "No transcript (Siamese mode)"
             st.session_state["matchedCmd"] = bestMatch
             st.session_state["lastLatencyMs"] = latency
             st.session_state["lastModeUsed"] = modeUsed

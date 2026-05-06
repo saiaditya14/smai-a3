@@ -8,8 +8,8 @@ Three evaluation regimes are reported:
   2. K-fold cross-validation (5-fold): mean ± std for confidence band.
   3. Cross-language hold-out: train on hi+ta, eval on te (and rotations).
 
-Trained head + per-command prototypes are persisted to siamese_head.pt
-and siamese_prototypes.npz so app.py can load them without retraining.
+Trained head + per-command prototypes are persisted under models/ so app.py
+can load them without retraining.
 
 Optional reject class (--reject) trains an extra prototype from
 help/no/*.wav plus noise-augmented copies, so the head can return None
@@ -63,24 +63,34 @@ def parse_filename(fname):
 # Embedding extraction with caching to disk
 # ---------------------------------------------------------------------------
 
-EMBEDDING_CACHE = os.path.join(os.path.dirname(__file__), "_siamese_embeddings.npz")
+EMBEDDING_CACHE = os.path.join(os.path.dirname(__file__), "models", "_siamese_embeddings.npz")
 
-def extract_all_embeddings(proc, model, include_reject=False, augment=True):
+PITCH_SEMITONES = (-3, 3, 6)
+
+def extract_all_embeddings(proc, model, include_reject=False, augment=True,
+                           pitch_augment=True):
     """
     Iterate over data/<cmd>/*.wav and (optionally) help/no/*.wav, extract
     encoder embeddings. Cache to disk so repeated runs are fast.
-    Returns (embeddings: (N, 384) float32, labels: list[str], langs: list[str|None],
-             indices: list[int|None]).
+
+    With pitch_augment=True, each command clip generates 3 additional
+    pitch-shifted variants (-3, +3, +6 semitones) marked with idx=None and
+    is_aug=True. Augmented copies inherit the source clip's language so
+    cross-language splits stay honest, but they are routed to train and
+    held out of every eval set (see *_split helpers below).
+
+    Returns (embeddings: (N, 384) float32, labels, langs, indices, is_aug).
     """
-    cache_key = f"reject={include_reject}_aug={augment}"
+    cache_key = f"reject={include_reject}_aug={augment}_pitch={pitch_augment}"
     if os.path.exists(EMBEDDING_CACHE):
         data = np.load(EMBEDDING_CACHE, allow_pickle=True)
         if str(data.get("cache_key", "")) == cache_key:
             print(f"Loaded cached embeddings: {data['embs'].shape[0]} clips")
+            is_aug = list(data["is_aug"]) if "is_aug" in data.files else [False] * len(data["labels"])
             return (data["embs"], list(data["labels"]),
-                    list(data["langs"]), list(data["indices"]))
+                    list(data["langs"]), list(data["indices"]), is_aug)
 
-    embs, labels, langs, indices = [], [], [], []
+    embs, labels, langs, indices, is_aug = [], [], [], [], []
 
     cmds = [d for d in sorted(os.listdir(DATA_DIR))
             if os.path.isdir(os.path.join(DATA_DIR, d)) and d != "none"]
@@ -95,12 +105,22 @@ def extract_all_embeddings(proc, model, include_reject=False, augment=True):
             peak = np.max(np.abs(audio))
             if peak > 0:
                 audio = audio / peak
-            emb = _extractEncoderEmbedding(audio, proc, model)
             lang, idx = parse_filename(fname)
-            embs.append(emb)
-            labels.append(cmd)
-            langs.append(lang)
-            indices.append(idx)
+
+            # Original clip
+            emb = _extractEncoderEmbedding(audio, proc, model)
+            embs.append(emb); labels.append(cmd); langs.append(lang)
+            indices.append(idx); is_aug.append(False)
+
+            # Pitch-shifted copies — train-only, idx=None marks as augmented
+            if pitch_augment:
+                for n_steps in PITCH_SEMITONES:
+                    shifted = librosa.effects.pitch_shift(
+                        audio, sr=targetRate, n_steps=n_steps,
+                    ).astype(np.float32)
+                    aug_emb = _extractEncoderEmbedding(shifted, proc, model)
+                    embs.append(aug_emb); labels.append(cmd); langs.append(lang)
+                    indices.append(None); is_aug.append(True)
 
     if include_reject and os.path.isdir(HELP_NO_DIR):
         no_files = sorted(glob.glob(os.path.join(HELP_NO_DIR, "*.wav")))
@@ -113,7 +133,6 @@ def extract_all_embeddings(proc, model, include_reject=False, augment=True):
 
             variants = [audio]
             if augment:
-                # Noise-augment: 4 copies at varied SNR + time-shift
                 rng = np.random.default_rng(42 + len(embs))
                 for snr_db in (10, 5, 0):
                     noise = rng.standard_normal(len(audio)).astype(np.float32)
@@ -127,17 +146,17 @@ def extract_all_embeddings(proc, model, include_reject=False, augment=True):
 
             for v in variants:
                 emb = _extractEncoderEmbedding(v, proc, model)
-                embs.append(emb)
-                labels.append(REJECT_LABEL)
-                langs.append(None)
-                indices.append(None)
+                embs.append(emb); labels.append(REJECT_LABEL); langs.append(None)
+                indices.append(None); is_aug.append(False)
 
     embs = np.stack(embs).astype(np.float32)
     np.savez(EMBEDDING_CACHE, embs=embs, labels=np.array(labels),
              langs=np.array(langs, dtype=object),
-             indices=np.array(indices, dtype=object), cache_key=cache_key)
+             indices=np.array(indices, dtype=object),
+             is_aug=np.array(is_aug, dtype=bool),
+             cache_key=cache_key)
     print(f"Cached {embs.shape[0]} embeddings to {EMBEDDING_CACHE}")
-    return embs, labels, langs, indices
+    return embs, labels, langs, indices, is_aug
 
 
 # ---------------------------------------------------------------------------
@@ -253,11 +272,13 @@ def evaluate_frozen_split(train_embs_t, train_labels, eval_embs_t, eval_labels):
 # Splits
 # ---------------------------------------------------------------------------
 
-def headline_split(labels, indices):
-    """Train on indices in {1,2,3}, eval on {4,5}. Reject samples go in train."""
+def headline_split(labels, indices, is_aug=None):
+    """Train on idx 1-3, eval on 4-5. Reject + augmented samples → train."""
+    if is_aug is None:
+        is_aug = [False] * len(labels)
     train_mask, eval_mask = [], []
-    for lab, idx in zip(labels, indices):
-        if lab == REJECT_LABEL or idx is None:
+    for lab, idx, aug in zip(labels, indices, is_aug):
+        if lab == REJECT_LABEL or aug or idx is None:
             train_mask.append(True); eval_mask.append(False)
         elif idx in (4, 5):
             train_mask.append(False); eval_mask.append(True)
@@ -266,13 +287,15 @@ def headline_split(labels, indices):
     return np.array(train_mask), np.array(eval_mask)
 
 
-def kfold_splits(labels, indices, k=5, seed=0):
-    """Stratified k-fold over (lang, idx) groups within each command label."""
+def kfold_splits(labels, indices, is_aug=None, k=5, seed=0):
+    """Stratified k-fold. Reject + augmented always train (excluded from folds)."""
+    if is_aug is None:
+        is_aug = [False] * len(labels)
     rng = random.Random(seed)
     folds = [[] for _ in range(k)]
     by_label = {}
     for i, lab in enumerate(labels):
-        if lab == REJECT_LABEL:
+        if lab == REJECT_LABEL or is_aug[i]:
             continue
         by_label.setdefault(lab, []).append(i)
     for lab, idx_list in by_label.items():
@@ -287,36 +310,56 @@ def kfold_splits(labels, indices, k=5, seed=0):
         yield train_mask, eval_mask
 
 
-def cross_language_splits(labels, langs):
-    """Train on two langs, eval on the third. Reject samples always in train."""
+def cross_language_splits(labels, langs, is_aug=None):
+    """
+    Train on two langs, eval on the third.
+    - Reject samples → always train (no language bias).
+    - Augmented samples of held-out language → excluded from train AND eval
+      (otherwise we leak held-out language into training).
+    - Augmented samples of seen languages → train (data diversity).
+    - All eval samples are non-augmented (real clips only).
+    """
+    if is_aug is None:
+        is_aug = [False] * len(labels)
     all_langs = ["hi", "ta", "te"]
     n = len(labels)
     for held_out in all_langs:
-        train_mask = np.array([
-            (langs[i] != held_out or labels[i] == REJECT_LABEL) for i in range(n)
-        ])
-        eval_mask = np.array([
-            (langs[i] == held_out and labels[i] != REJECT_LABEL) for i in range(n)
-        ])
-        yield held_out, train_mask, eval_mask
+        train_mask = []
+        eval_mask = []
+        for i in range(n):
+            lab, lang, aug = labels[i], langs[i], is_aug[i]
+            if lab == REJECT_LABEL:
+                train_mask.append(True); eval_mask.append(False); continue
+            if aug:
+                # Augmented clips: only included in train if their language is seen
+                train_mask.append(lang != held_out)
+                eval_mask.append(False)
+                continue
+            if lang == held_out:
+                train_mask.append(False); eval_mask.append(True)
+            else:
+                train_mask.append(True); eval_mask.append(False)
+        yield held_out, np.array(train_mask), np.array(eval_mask)
 
 
 # ---------------------------------------------------------------------------
 # Main runner
 # ---------------------------------------------------------------------------
 
-def run(include_reject=False, save=True, kfold=5, epochs=100):
+def run(include_reject=False, save=True, kfold=5, epochs=100, pitch_augment=True):
     proc, model = loadModel()
-    embs_np, labels, langs, indices = extract_all_embeddings(
-        proc, model, include_reject=include_reject
+    embs_np, labels, langs, indices, is_aug = extract_all_embeddings(
+        proc, model, include_reject=include_reject, pitch_augment=pitch_augment,
     )
     embs_t = torch.tensor(embs_np, dtype=torch.float32)
+    n_aug = sum(is_aug)
+    print(f"Total clips: {len(labels)} ({n_aug} pitch-augmented)")
 
     print()
     print("=" * 70)
     print("  HEADLINE SPLIT  (train idx 1-3, eval idx 4-5)")
     print("=" * 70)
-    train_mask, eval_mask = headline_split(labels, indices)
+    train_mask, eval_mask = headline_split(labels, indices, is_aug)
     train_embs_t = embs_t[train_mask]
     eval_embs_t = embs_t[eval_mask]
     train_lab = [l for l, m in zip(labels, train_mask) if m]
@@ -333,6 +376,7 @@ def run(include_reject=False, save=True, kfold=5, epochs=100):
     print(f"  Learned projection head:            {learned_acc*100:.2f}%")
 
     if save:
+        os.makedirs(os.path.dirname(SIAMESE_HEAD_PATH), exist_ok=True)
         torch.save(head.state_dict(), SIAMESE_HEAD_PATH)
         # Index mapping for app.py: filter out reject from the saved prototypes
         # so the live app uses command prototypes only (reject is enforced via
@@ -343,11 +387,9 @@ def run(include_reject=False, save=True, kfold=5, epochs=100):
         actions_arr = []
         i = 0
         for lab, p in headline_protos.items():
-            if lab == REJECT_LABEL:
-                continue
-            idx_to_action[i] = lab.replace("_", " ")
+            idx_to_action[i] = lab.replace("_", " ") if lab != REJECT_LABEL else REJECT_LABEL
             idx_arr.append(i)
-            actions_arr.append(lab.replace("_", " "))
+            actions_arr.append(lab.replace("_", " ") if lab != REJECT_LABEL else REJECT_LABEL)
             protos_arr.append(p.numpy())
             i += 1
         np.savez(
@@ -364,7 +406,7 @@ def run(include_reject=False, save=True, kfold=5, epochs=100):
     print(f"  K-FOLD CROSS-VALIDATION  (k={kfold})")
     print("=" * 70)
     accs = []
-    for fold_id, (tr_mask, ev_mask) in enumerate(kfold_splits(labels, indices, k=kfold)):
+    for fold_id, (tr_mask, ev_mask) in enumerate(kfold_splits(labels, indices, is_aug, k=kfold)):
         tr_embs = embs_t[tr_mask]; ev_embs = embs_t[ev_mask]
         tr_lab = [l for l, m in zip(labels, tr_mask) if m]
         ev_lab = [l for l, m in zip(labels, ev_mask) if m]
@@ -378,7 +420,7 @@ def run(include_reject=False, save=True, kfold=5, epochs=100):
     print("=" * 70)
     print("  CROSS-LANGUAGE HOLD-OUT  (train hi+ta, eval te; etc.)")
     print("=" * 70)
-    for held, tr_mask, ev_mask in cross_language_splits(labels, langs):
+    for held, tr_mask, ev_mask in cross_language_splits(labels, langs, is_aug):
         tr_embs = embs_t[tr_mask]; ev_embs = embs_t[ev_mask]
         tr_lab = [l for l, m in zip(labels, tr_mask) if m]
         ev_lab = [l for l, m in zip(labels, ev_mask) if m]
@@ -395,9 +437,13 @@ if __name__ == "__main__":
                         help="Include a reject class trained on help/no + augmented copies.")
     parser.add_argument("--no-save", action="store_true",
                         help="Do not save the trained head/prototypes to disk.")
+    parser.add_argument("--no-pitch-augment", action="store_true",
+                        help="Disable pitch-shift augmentation of command clips "
+                             "(default: enabled, ±3/+6 semitones).")
     parser.add_argument("--kfold", type=int, default=5)
     parser.add_argument("--epochs", type=int, default=100)
     args = parser.parse_args()
 
     run(include_reject=args.reject, save=not args.no_save,
-        kfold=args.kfold, epochs=args.epochs)
+        kfold=args.kfold, epochs=args.epochs,
+        pitch_augment=not args.no_pitch_augment)

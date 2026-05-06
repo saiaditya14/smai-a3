@@ -24,11 +24,12 @@ languages → real-time UI feedback. No GPU, no paid inference.
 | Approach | Intent accuracy |
 |---|---|
 | Raw whisper-tiny + exact match | 3.7 % |
-| Path A: transcription + fuzzy match | **TBD %** |
-| Path B: siamese projection head (5-fold CV) | **91.98 % ± 4.97 %** |
+| Path A: transcription + fuzzy match | **70.47 %** |
+| Path B: siamese projection head (headline split) | **93.22 %** |
+| Path B: siamese projection head (5-fold CV) | **91.24 % ± 6.25 %** |
 
 **Cross-language hold-out** (train hi+ta, test te) collapses Path B to
-8–26 % — the projection head learns language-specific acoustic templates,
+0–18 % — the projection head learns language-specific acoustic templates,
 not language-independent intent. Lesson: ship Path A as default, Path B
 as a faster alternative when all target languages are seen at train time.
 

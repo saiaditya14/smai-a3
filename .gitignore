@@ -90,4 +90,6 @@ _siamese_embeddings.npz
 models/_siamese_embeddings.npz
 *.log
 *.pdf
+*.aux
+*.out
 results/*.log

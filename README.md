@@ -26,13 +26,14 @@ core.py                   shared pipeline module — wakeword, transcribe, siame
 benchmarking.py           FLEURS WER + local-command accuracy + negatives FPR
 ablation_audio.py         audio preprocessing ablation
 ablation_siamese.py       siamese ablation: headline + k-fold + cross-language splits
-test_wakeword.py          standalone wakeword threshold sweep
+debug/test_wakeword.py    standalone wakeword threshold sweep
 data/                     self-recorded multilingual command clips
 help/                     wakeword positives + hard negatives
 models/                   saved siamese head/prototypes and embedding cache
 assets/                   UI SVG/image assets
 results/                  benchmark CSVs and run logs
 docs/REPORT.md            6-8 page Tier 2 technical report
+docs/REPORT.tex           LaTeX source for the final report
 docs/SUBMISSION.md        concise PDF assembly source with screenshots/links
 docs/ABLATION_STUDY.md    ablation numbers + analysis
 docs/screenshots/         deployed prototype screenshots

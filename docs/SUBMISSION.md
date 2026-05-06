@@ -49,10 +49,10 @@ Headline results:
 | Metric | Result |
 |---|---|
 | Path A skip-wake intent accuracy | 70.47% |
-| Path B headline accuracy | 93.22% |
+| Path B headline accuracy on wakeword-prefixed held-out clips | 93.22% |
 | Path B 5-fold CV | 91.24% ± 6.25% |
-| Path A latency | ~1623 ms / clip |
-| Path B latency | ~270 ms / clip |
+| Path A latency | ~1830 ms / clip |
+| Path B latency | ~730 ms / clip |
 | Path B command FPR on unseen hard negatives | 0.0% |
 
 The submitted recommendation is Path B as the default because T11.7 uses a

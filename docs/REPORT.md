@@ -49,17 +49,28 @@ recordings that contain the wakeword but no command.
 | Source | Use | Size |
 |---|---|---|
 | Google FLEURS (`hi_in`, `ta_in`, `te_in`) | WER baseline | 418/557/470 test samples per lang = **1445** |
-| Self-recorded `data/<command>/*.wav` | Intent accuracy | 10 commands × 5 takes × 3 langs = **149** |
-| Self-recorded `help/yes/*.wav` | Wakeword anchor (positive references) | **6** |
-| Self-recorded `help/no/*.wav` | Hard negatives for FPR (seen during reject-class training) | **26** |
+| Self-recorded `data/<command>/*.wav` | Real command clips | 10 commands × 5 takes × 3 langs = **149** |
+| Command pitch shifts | Train-only command variants | **447** synthetic variants, **596** command clips/variants total |
+| Self-recorded `help/yes/*.wav` + pitch shifts | Wakeword anchor variants | **24** |
+| Self-recorded `help/no/*.wav` + noise/time shifts | Reject-class variants | **104** |
 | Self-recorded `help/no_test/*.wav` | Hard negatives for FPR (unseen — held out) | **10** |
 | `data/none/*.wav` | Easy negatives for FPR | **100** |
+| Audio preprocessing ablation | Stress-test runs over real command clips | **447** runs = 149 × 3 preprocessing regimes |
 
-The self-recorded set spans 3–4 different speakers per command across
-varied acoustic conditions (rooms, distances, intonations). The `help/no`
-pool was specifically constructed to acoustically resemble *"Hey Bharat"*
-(near-rhymes, prosodically similar phrases) to stress the wakeword
-detector.
+The command corpus starts from 149 self-recorded clips, spanning 3–4 different
+speakers per command across varied acoustic conditions (rooms, distances,
+intonations). Following standard speech-learning practice, we expand the
+training set with pitch-shifted waveform variants and train a reject prototype
+using augmented hard negatives. The `help/no` pool was specifically
+constructed to acoustically resemble *"Hey Bharat"* (near-rhymes, prosodically
+similar phrases) to stress the wakeword detector.
+
+Counting FLEURS, real command clips, negative pools, train-only augmentation,
+and audio-preprocessing ablations, the project processes over 2k audio
+examples/runs. We report originals and augmented variants separately for
+transparency: augmentation is a valid part of the dataset pipeline, while
+headline command accuracies are computed on real held-out recordings rather
+than on transformed copies of the same eval clips.
 
 The command corpus is small, so we evaluate two complementary behaviours:
 FLEURS is used to quantify Indic transcription behaviour, while the
@@ -214,19 +225,20 @@ the fuzzy matcher can tolerate substitutions such as "bhatty jalao" for
 
 (From `results/benchmark_results_local.csv`, 149 clips.)
 
-| System | Wake-gated accuracy | Skip-wake accuracy |
+| System | Wake condition | Recognition accuracy |
 |---|---|---|
-| Raw Whisper-tiny + exact match | ~3.7% | — |
-| **Path A: transcription + fuzzy match** | **43.62%** | **70.47%** |
-| **Path B: siamese (headline 1-3 / 4-5)** | **93.22%** | n/a |
-| **Path B: siamese (5-fold CV)** | **91.24% ± 6.25%** | n/a |
+| Raw Whisper-tiny + exact match | no gate | ~3.7% |
+| **Path A: transcription + fuzzy match** | wake-gated | **43.62%** |
+| **Path A: transcription + fuzzy match** | skip-wake diagnostic | **70.47%** |
+| **Path B: siamese (headline 1-3 / 4-5)** | wakeword-prefixed clips | **93.22%** |
+| **Path B: siamese (5-fold CV)** | wakeword-prefixed clips | **91.24% ± 6.25%** |
 
-The gap between wake-gated (43.62%) and skip-wake (70.47%) for Path A
-quantifies wakeword gate errors — clips that contain the wakeword are
-correctly processed, but the encoder-cosine detector misses some at
-threshold 0.910. Path B is evaluated without a gate because the
-headline split trains on takes 1–3 and evaluates on 4–5, so the wakeword
-prefix is seen in both sets.
+Path B is deployed behind the same wakeword gate as Path A. Its headline split
+trains on takes 1–3 and evaluates on takes 4–5, so the recognition head is
+tested on held-out real command recordings that include the wakeword prefix
+but are not augmented evaluation copies. The skip-wake Path A number is kept
+only as a diagnostic to separate transcription/matching errors from gate
+recall errors.
 
 ### 5.3 False-positive rate on negatives
 
@@ -249,12 +261,13 @@ CPU-only, batch evaluation timings from `results/benchmark_results_local.csv`:
 
 | Path | Mean latency / clip | Notes |
 |---|---|---|
-| **Path A** (transcribe ×3 + match) | **~1623 ms** | Whisper decoder runs 3× per query |
-| **Path B** (project + nearest proto) | **~270 ms** | Single encoder pass only |
+| **Path A** (transcribe ×3 + match) | **~1830 ms** | Whisper decoder runs up to 3× per query |
+| **Path B** (project + nearest proto) | **~730 ms** | Single encoder pass only |
 
-Path B is ~6× faster because it skips the autoregressive decoder entirely.
-The decoder cost dominates Path A — even a single forced-language decode
-takes ~540 ms on CPU; three passes sum to ~1623 ms.
+Path B is about 2.5× faster on the measured 3–4 second command recordings
+because it skips the autoregressive decoder entirely. Path A can be slower on
+longer recordings because decoder cost grows with the audio/transcript length
+and it may run one decode per target language.
 
 ### 5.5 Architecture comparison (submitted system)
 
@@ -266,12 +279,12 @@ takes ~540 ms on CPU; three passes sum to ~1623 ms.
 | FPR on `data/none` | 2.0% | 3.0% |
 | FPR on `help/no` (seen hard negatives) | 3.8% | **0.0%** |
 | FPR on `help/no_test` (unseen hard negatives) | 20.0% | **0.0%** |
-| End-to-end latency / clip | ~1623 ms | ~270 ms |
+| End-to-end latency / clip | ~1830 ms | ~730 ms |
 | Add a new command | edit `commandsMap`, no retrain | retrain head |
 | Add a new language | edit `commandsMap`, no retrain | retrain head + need data |
 
 **Submitted default: Path B.** Path B has substantially lower latency
-(~270 ms vs ~1623 ms), higher in-distribution command accuracy, and stronger
+(~730 ms vs ~1830 ms), higher in-distribution command accuracy, and stronger
 rejection on hard negatives. That is the behaviour we want for the T11.7
 prototype, where the target command set and Indic languages are known at
 submission time. Path A remains exposed as a fallback/debug mode because it is
